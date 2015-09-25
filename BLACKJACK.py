@@ -114,7 +114,7 @@ class Cards:
             return 4 ### No blackjack
         
     def won(self):
-        '''This will check if someone has won or busted'''
+        '''Checks if someone has won or busted'''
         ###Variables players deck###
         calDeck = deck
         calDeck = [10 if x==11 or x ==12 or x==13 else x for x in calDeck] ### This comprehensive list replaces 11,12,13 with 10 in deck so can calculate score
@@ -122,8 +122,8 @@ class Cards:
         calDeckSum = sum(calDeck)
         if calDeckSum > 21:
             calDeck = [1 if x==11 else x for x in calDeck] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
-            ### FIGURE OUT how to - 10 if A in deck calDeckSum = calDeckSum - 10
         print(calDeck)
+        calDeckSum = sum(calDeck)
         print(calDeckSum)
         ###Variables computers deck###
         calDeckC = deckC
@@ -132,24 +132,16 @@ class Cards:
         calDeckCSum = sum(calDeckC)
         if calDeckCSum > 21:
             calDeckC = [1 if x==11 else x for x in calDeckC] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
-            ### FIGURE OUT HOW TO - 10 from sum if A calDeckCSum = [-10 if x==11 else x for x in calDeckC]
         print(calDeckC)
+        calDeckCSum = sum(calDeckC)
         print(calDeckCSum)
-        ###Logic for player busting/win ###
+        ###Logic for player or computer busting/win ###
         if calDeckSum > 21:
             return 2 ### This is returning that the player lost b/c they busted
-        elif calDeckSum <= 21:
-            print("HELLO")
-            return 4 ### No one has won or busted
-        else:
-            return "ERROR WON METHOD"
-        ###Logic for computer busting/win ###
-        if calDeckCSum <= 21 and calDeckCSum > 0:
-            return 4 ### No one has won or busted
-        elif calDeckCSum > 21:
+        if calDeckCSum > 21:
             return 1 ### This is returning that the player won b/c computer busted
         else:
-            return "ERROR WON METHOD"
+            return 4 ### No one has won or busted
         
 class Players:
     def __init__(self, player, comp):
@@ -160,32 +152,27 @@ class Players:
         
         
 ################## VARIABLES ##################
-deck = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"}
-deckC = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"} ### computer's deck only for adding cards
-randomCard = "0"
-player = 0 ### This variable will be passed to Players method to keep the score for player
-comp = 0 ### This variable will be passed to Players method to keep the score for computer
-pWon = 0 ### Need to pass this to won method in Cards class so this can tally, then Players-
-         ### class will keep the score (I am using 2 classes to practice inheritance
-cWon = 0 ### This is same as pWon but for computer
-
-clear = "\n" * 100 ### clears the screen 
+while True: ### This loop starts the program over with a new random hand
+    deck = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"}
+    deckC = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"} ### computer's deck only for adding cards
+    randomCard = "0"
+    player = 0 ### This variable will be passed to Players method to keep the score for player
+    comp = 0 ### This variable will be passed to Players method to keep the score for computer
+    pWon = 0 ### Need to pass this to won method in Cards class so this can tally, then Players-
+             ### class will keep the score (I am using 2 classes to practice inheritance
+    cWon = 0 ### This is same as pWon but for computer
+    
+    clear = "\n" * 100 ### clears the screen 
 ################## MAIN ######################
 
-x = Cards(deck, randomCard, deckC)
-y = Players(player, comp)
-deck = x.Rcard() ### This grabs and freezes the 4 randomly generated #’s
-deckC = x.Rcard()
-while True:
-
-    winner = x.blackjack()     
-    winner1 = x.won()
-                                  ### The frozen cards are 1st going to cardStart then to blackjack then to won methods. 
-                    ###This starts the chain. 
-        
+    x = Cards(deck, randomCard, deckC)
+    y = Players(player, comp)
+    deck = x.Rcard() ### This grabs and freezes the 4 randomly generated #’s
+    deckC = x.Rcard()
+    winner = x.blackjack()  ### The frozen cards are 1st going to cardStart then to blackjack then to won methods. Starts the chain
     while True:
-        
-        if winner == 1 or winner1 == 1:
+      
+        if winner == 1:
             again = input("You WON this round. Play again? 1 YES 2 NO:")
             if again == "1":
                 print(clear)
@@ -196,7 +183,7 @@ while True:
             else:
                 print("Come-on-now, enter either a 1 or 2!")
                 continue
-        elif winner == 2 or winner1 == 2:
+        elif winner == 2:
             again = input("You LOST this round. Play again? 1 YES 2 NO:")
             if again == "1":
                 print(clear)
@@ -207,8 +194,8 @@ while True:
             else:
                 print("Come-on-now, enter either a 1 or 2!")
                 continue
-        elif winner == 3 or winner1 == 3:
-            again = input("You TIED this round. Play again? 1 YES 2 NO:")
+        elif winner == 3:
+            again = input("PUSH!!! Play again? 1 YES 2 NO:")
             if again == "1":
                 print(clear)
                 break
@@ -218,25 +205,102 @@ while True:
             else:
                 print("Come-on-now, enter either a 1 or 2!")
                 continue
-        elif winner == 4 or winner1 == 4: ### No blackjack
+        elif winner == 4: ### No blackjack
                 pass
         else:
             print("ERROR MAIN")
             continue
-        #move = x.actions() 
-        while True:
-            move = x.actions() ### Asking player to hit or stay
-            if move == "1":
-                x.addCard()
-                x.won() ### checking if anyone won
-                print(winner)
-                print(winner1)
-                break
-            elif move == "2": ### Even if player stays the computer still needs a card
-                x.addCardComp()
-                x.won()
-                break 
-            else:
-                print("Come-on-now, enter either a 1 or 2!")
+        
+        move = x.actions() ### Asking player to hit or stay
+        if move == "1":
+            x.addCard()
+            WON = x.won() ### checking if anyone won
+            if WON == 1:
+                again = input("You WON this round. Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
                 continue
-            
+            elif WON == 2:
+                again = input("You LOST this round. Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
+                continue
+            elif WON == 3:
+                again = input("PUSH!!! Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
+                continue
+            elif WON == 4:
+                continue
+            continue
+        elif move == "2": ### Even if player stays the computer still needs a card
+            x.addCardComp()
+            WON = x.won() ### checking if anyone won
+            if WON == 1:
+                again = input("You WON this round. Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
+                continue
+            elif WON == 2:
+                again = input("You LOST this round. Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
+                continue
+            elif WON == 3:
+                again = input("PUSH!!! Play again? 1 YES 2 NO:")
+                if again == "1":
+                    print(clear)
+                    break
+                elif again == "2":
+                    print("OK then, it was fun playing. Goodbye.")
+                    sys.exit(0)
+                else:
+                    print("Come-on-now, enter either a 1 or 2!")
+                    continue
+                continue
+            elif WON == 4:
+                x.addCardComp()
+                    
+                continue
+            continue 
+        else:
+            print("Come-on-now, enter either a 1 or 2!")
+            continue
+    ####  THOUGTS add player and comp winning or loosing logic in addCardComp. Also if pushed. That has to be the final call. 
+    ####     Have addCardComp return a # if won or lost and do a nested IF loop in elif WON == 4. This logic cannot be in the 
+    ####     x.won as it needs to check if player busted in hit loop and can't automatically win at beg.

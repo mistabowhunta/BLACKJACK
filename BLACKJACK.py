@@ -2,6 +2,24 @@
 Created on Sep 8, 2015
 
 @author: Isaac
+
+The MIT License (MIT)
+Copyright (c) [2015] [Isaac Nason]
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 '''
 import random, sys, time
 
@@ -25,156 +43,84 @@ class Cards:
         deck.append(randomCard5)
         howLong = len(deck) - 1
         e = deck[howLong]
-        v = self.deck[e] ### Had to put the randomized # into the dictionary key
+        v = self.deck[e] ### Had to put the randomized # into the dictionary key to get face card
+        
         print()
         print("\t\t* * * * *")
         print("\t\t*" "\t*")
         print("\t\t*   {0}"  "\t*".format(v))
         print("\t\t*      " " *")
         print("\t\t* * * * *")
-        return " " 
+        calDeck = deck
+        calDeck = [10 if x==11 or x ==12 or x==13 else x for x in calDeck] ### This comprehensive list replaces 11,12,13 with 10 in deck so can calculate score
+        calDeck = [11 if x==0 else x for x in calDeck]### Turns all A's to value 11 by default
+        #calDeckSum = self.calDeckSum 
+        self.calDeckSum = sum(calDeck)
+        #self.calDeckSum = calDeckSum ### have to assign global variable so I can use it in addCard methods TEST this
+        if self.calDeckSum > 21:
+            calDeck = [1 if x==11 else x for x in calDeck] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
+        #print(calDeck) just needed for testing to see the deck
+        
+        self.calDeckSum = sum(calDeck)
+        #self.calDeckSum = calDeckSum
+        #print(self.calDeckSum)
+        return self.calDeckSum
     
     def addCardComp(self):
         '''Adds another card for computer'''
         while True:
-            randomCard5 = random.randint(0,13)
-            deckC.append(randomCard5)
-            howLong = len(deckC) - 1
-            c = deckC[howLong]
-            v = self.deckC[c] ### Had to put the randomized # into the dictionary key
-            '''
-            print()
-            print("\t\t* * * * *")
-            print("\t\t*" "\t*")
-            print("\t\t*   " + v + "\t*")
-            print("\t\t*      " " *")
-            print("\t\t* * * * *")
-            print()
-            '''
-        
-            calDeckSum = self.calDeckSum ### calling the sum variables from won method so can work some logic when card is added
-            calDeckCSum = self.calDeckCSum
-            if calDeckSum > 21:
-                while True:
-                    again = input("You LOST this round. Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                    
-            elif calDeckCSum > 21:
-                while True:
-                    again = input("You WON this round. Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                    
-            elif calDeckCSum <= 16 and calDeckCSum <= calDeckSum:
-                calDeckC = deckC
-                calDeckC = [10 if x==11 or x ==12 or x==13 else x for x in calDeckC] ### this changes all 11, 12, or 13 to value of 10 for Computers hand.
-                calDeckC = [11 if x==0 else x for x in calDeckC]### Turns all A's to value 11 by default
-                calDeckCSum = sum(calDeckC)
-                self.calDeckCSum = calDeckCSum 
-                if calDeckCSum > 21:
-                    calDeckC = [1 if x==11 else x for x in calDeckC] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
-                print(calDeckC)
-                calDeckCSum = sum(calDeckC)
-                print(calDeckCSum)
-                #calDeckCSum = calDeckCSum + 
-                print(calDeckCSum)
+            
+            calDeckC = deckC
+            calDeckC = [10 if x==11 or x ==12 or x==13 else x for x in calDeckC] ### this changes all 11, 12, or 13 to value of 10 for Computers hand.
+            calDeckC = [11 if x==0 else x for x in calDeckC]### Turns all A's to value 11 by default
+            self.calDeckCSum = sum(calDeckC)
+            if self.calDeckCSum > 21:
+                calDeckC = [1 if x==11 else x for x in calDeckC] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
+                self.calDeckCSum = sum(calDeckC)
                 
+            if self.calDeckCSum > self.calDeckSum and self.calDeckCSum <= 21:
+                print("\t\t\t\t\tDEALER STAYS")
+                time.sleep(2)
+                return self.calDeckCSum
+            
+            if self.calDeckCSum >= 18 and self.calDeckCSum <= 21:
+                print("\t\t\t\t\tDEALER STAYS")
+                time.sleep(2)
+                return self.calDeckCSum
+            
+            if self.calDeckCSum <= 17 and self.calDeckCSum <= self.calDeckSum:
+                randomCard5 = random.randint(0,13)
+                deckC.append(randomCard5)
+                howLong = len(deckC) - 1
+                c = deckC[howLong]
+                v = self.deckC[c] ### Had to put the randomized # into the dictionary key
+                print("\t\t\t\t\tDEALER HITS!")
+                time.sleep(3)
                 print()
                 print("\t\t* * * * *")
                 print("\t\t*" "\t*")
-                print("\t\t*   " + v + "\t*")
+                print("\t\t*   {0}"  "\t*".format(v))
                 print("\t\t*      " " *")
                 print("\t\t* * * * *")
-                print()
-                
                 continue
-                '''
-                print()
-                print("\t\t* * * * *")
-                print("\t\t*" "\t*")
-                print("\t\t*   " + v + "\t*")
-                print("\t\t*      " " *")
-                print("\t\t* * * * *")
-                print()
-                '''
-                
-            elif calDeckCSum > 16 and calDeckCSum > calDeckSum:
-                while True:
-                    again = input("You LOST this round. Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                    
-            elif calDeckCSum == calDeckSum:
-                while True:
-                    again = input("PUSH!!! Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                continue
-                '''
-            elif calDeckCSum < calDeckSum:
-                while True:
-                    again = input("You WON this round. Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        print(clear)
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                    
-            elif calDeckCSum > calDeckSum:
-                while True:
-                    again = input("You LOST this round. Play again? 1 YES 2 NO:")
-                    if again == "1":
-                        
-                        return 1 ### play again
-                    elif again == "2":
-                        print("OK then, it was fun playing. Goodbye.")
-                        sys.exit(0)
-                    else:
-                        print("Come-on-now, enter either a 1 or 2!")
-                        continue
-                    '''
-            else:
-                return "ERROR IN ADDCARDCOMP"
-            continue
-        #return " "
-    
+            
+            
+            return self.calDeckCSum
+            
     def actions(self):
-        '''Hit or stay. Will also check if player or computer busted or stayed'''
+        '''Hit or stay'''
         
+        print("Your total: {0}".format(self.calDeckSum))
+        #print("Dealer's total: {0}".format(self.calDeckCSum))
         x = input("HIT or STAY? 1 = HIT or 2 = STAY:")
+        if x == "1":
+            
+            print("\t\t\t\t\tHIT!")
+            time.sleep(1)
+        elif x == "2":
+            
+            print("\t\t\t\t\tSTAY")
+            time.sleep(1)
         return x
     
     def blackjack(self):
@@ -200,7 +146,7 @@ class Cards:
     
     def cardStart(self):
         '''Displays 2 player cards and 2 computer cards at the start of game '''
-        a = deckC[0] ### w,y,x,z are the 4 randomly generated cards to display
+        a = deckC[0] ### a,b,c,d are the 4 randomly generated cards to display
         b = deckC[1] ### deck was generated from Rcard function in class then passed to MAIN to freeze the #'s
         c = deck[0] ### the frozen #'s are then passed back to this function
         d = deck[1]
@@ -208,7 +154,18 @@ class Cards:
         x = self.deckC[b]
         y = self.deck[c]
         z = self.deck[d]
-        print(w) ### GET RID OF THIS AFTER TESTING!!!!!!!!!!!!!!
+        
+        calDeck = deck
+        calDeck = [10 if x==11 or x ==12 or x==13 else x for x in calDeck] ### This comprehensive list replaces 11,12,13 with 10 in deck so can calculate score
+        calDeck = [11 if x==0 else x for x in calDeck]### Turns all A's to value 11 by default
+        self.calDeckSum = sum(calDeck)
+        
+        calDeckC = deckC
+        calDeckC = [10 if x==11 or x ==12 or x==13 else x for x in calDeckC] ### this changes all 11, 12, or 13 to value of 10 for Computers hand.
+        calDeckC = [11 if x==0 else x for x in calDeckC]### Turns all A's to value 11 by default
+        self.calDeckCSum = sum(calDeckC)
+
+        #print(w) ### GET RID OF THIS AFTER TESTING!!!!!!!!!!!!!!
 
         print("\t\t* * * * *\t* * * * *")
         print("\t\t*"  "\t*\t*"  "\t*")
@@ -238,39 +195,39 @@ class Cards:
             return 4 ### No blackjack
         
     def won(self):
-        '''Checks if someone has won or busted'''
-        ###Variables players deck###
-        calDeck = deck
-        calDeck = [10 if x==11 or x ==12 or x==13 else x for x in calDeck] ### This comprehensive list replaces 11,12,13 with 10 in deck so can calculate score
-        calDeck = [11 if x==0 else x for x in calDeck]### Turns all A's to value 11 by default
-        calDeckSum = sum(calDeck)
-        self.calDeckSum = calDeckSum ### have to assign global variable to I can use it in addCard methods
-        if calDeckSum > 21:
-            calDeck = [1 if x==11 else x for x in calDeck] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
-        print(calDeck)
-        calDeckSum = sum(calDeck)
-        print(calDeckSum)
-        ###Variables computers deck###
-        calDeckC = deckC
-        calDeckC = [10 if x==11 or x ==12 or x==13 else x for x in calDeckC] ### this changes all 11, 12, or 13 to value of 10 for Computers hand.
-        calDeckC = [11 if x==0 else x for x in calDeckC]### Turns all A's to value 11 by default
-        calDeckCSum = sum(calDeckC)
-        self.calDeckCSum = calDeckCSum 
-        if calDeckCSum > 21:
-            calDeckC = [1 if x==11 else x for x in calDeckC] ### if 11 (Ace) in deck and sum is > 21 the A's value will change to 1
-        print(calDeckC)
-        calDeckCSum = sum(calDeckC)
-        print(calDeckCSum)
-        ###Logic for player or computer busting/win ###
+        '''Checks if either lost by busting'''
         
-        if calDeckSum > 21:
+        #print(self.calDeckSum)
+        #print(self.calDeckCSum) just needed for testing to see totals can get rid of if don't need anymore
+        
+        if self.calDeckSum > 21:
+            #print("Your total: {0}".format(self.calDeckSum))
+            #print("Dealer's total: {0}".format(self.calDeckCSum))
             return 2 ### Player lost b/c they busted at the start
-        elif calDeckCSum > 21:
+        if self.calDeckCSum > 21:
+            #print("Your total: {0}".format(self.calDeckSum))
+            #print("Dealer's total: {0}".format(self.calDeckCSum))
             return 1 ### Player won b/c computer busted
-        #elif calDeckCSum > 16:
-            #return 5 ### Need to tell program not to add a card for computer if sum is greater than 16
         else:
             return 4 ### No one has won or busted
+        
+    def won2(self):
+        '''Checks if player won the comp by having higher cards. Couldn't put in WON method because it checked too soon'''
+        
+        if self.calDeckSum > self.calDeckCSum:
+            print("Your total: {0}".format(self.calDeckSum))
+            print("Dealer's total: {0}".format(self.calDeckCSum))
+            return 1 ### Player won
+        if self.calDeckSum == self.calDeckCSum:
+            print("Your total: {0}".format(self.calDeckSum))
+            print("Dealer's total: {0}".format(self.calDeckCSum))
+            return 3 ### PUSH!
+        if self.calDeckCSum > self.calDeckSum:
+            print("Your total: {0}".format(self.calDeckSum))
+            print("Dealer's total: {0}".format(self.calDeckCSum))
+            return 2 ### Computer won
+        else:
+            pass ### No one has won or busted
         
 class Players:
     def __init__(self, player, comp):
@@ -280,7 +237,24 @@ class Players:
         pass
         
         
-################## VARIABLES ##################
+################## VARIABLES & INTRO ##################
+print("\t\t\t\t\t\t\t\t Welcome")
+time.sleep(2)
+print("\t\t\t\t\t\t\t\t   to")
+time.sleep(2)
+print("\t\t\t\t\t\t\t\tB")
+time.sleep(1)
+print("\t\t\t\t\t\t\t\t L")
+time.sleep(1)
+print("\t\t\t\t\t\t\t\t  A")
+time.sleep(1)
+print("\t\t\t\t\t\t\t\t   C")
+time.sleep(1)
+print("\t\t\t\t\t\t\t\t    K")
+time.sleep(1)
+print("\t\t\t\t\t\t\t\tBLACKJACK!!!")
+time.sleep(2)
+
 while True: ### This loop starts the program over with a new random hand
     deck = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"}
     deckC = {0:"A",1:"1",2:"2",3:"3",4:"4",5:"5",6:"6",7:"7",8:"8",9:"9",10:"10",11:"J",12:"Q",13:"K"} ### computer's deck only for adding cards
@@ -295,12 +269,13 @@ while True: ### This loop starts the program over with a new random hand
     
     clear = "\n" * 100 ### clears the screen 
 ################## MAIN ######################
-
+    
     x = Cards(deck, randomCard, deckC, calDeckSum, calDeckCSum)
     y = Players(player, comp)
-    deck = x.Rcard() ### This grabs and freezes the 4 randomly generated #’s
-    deckC = x.Rcard()
-    winner = x.blackjack()  ### The frozen cards are 1st going to cardStart then to blackjack methods. Starts the chain
+    deck = x.Rcard() ### This grabs and freezes the 2 randomly generated player #’s
+    deckC = x.Rcard()### This grabs and freezes the 2 randomly generated comp #’s
+    winner = x.blackjack()  ### The frozen cards are 1st going to cardStart then to blackjack method. Starts the chain
+    
     while True:
       
         if winner == 1:
@@ -344,102 +319,108 @@ while True: ### This loop starts the program over with a new random hand
         
         move = x.actions() ### Asking player to hit or stay
         if move == "1":
+            
             x.addCard()
-            WON = x.won() ### checking if anyone won
+            WON = x.won() ### checking if player busted
+            #print(calDeckSum)
+            #print(WON) just needed for testing, can get rid of if done testing
             if WON == 1:
-                again = input("You WON this round. Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
-                continue
+                while True: ### Need this loop so if player enters anything other than 1 or 2 it loops back here
+                    again = input("You WON this round. Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break ### only comes to this point if player wants to play again. This break starts back at the beg w new cards
             elif WON == 2:
-                again = input("You LOST this round. Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
-                continue
+                while True:
+                    again = input("You LOST this round. Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break
             elif WON == 3:
-                again = input("PUSH!!! Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
+                while True:
+                    again = input("PUSH!!! Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break
+            elif WON == 4: ### 4 means no one has won
                 continue
-            elif WON == 4:
+            continue    
+        elif move == "2": ### Even if player stays the computer still needs a card
+            #calDeckCSum = x.addCardComp()   ### Freezing computers total SUM
+            #print(calDeckCSum)
+            x.addCardComp()
+            WON = x.won() ### checking if anyone won
+            WON2 = x.won2() ### Checks if player won the comp by having higher cards. Couldn't put that in WON method because it checked too soon
+            #print(WON) just needed for testing, can get rid of if done testing
+            if WON == 1 or WON2 == 1:
+                while True:
+                    again = input("You WON this round. Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break
+            elif WON == 2 or WON2 == 2:
+                while True:
+                    again = input("You LOST this round. Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break
+            elif WON == 3 or WON2 == 3: ### pushed
+                while True:
+                    again = input("PUSH!!! Play again? 1 YES 2 NO:")
+                    if again == "1":
+                        print(clear)
+                        break
+                    elif again == "2":
+                        print("OK then, it was fun playing. Goodbye.")
+                        sys.exit(0)
+                    else:
+                        print("Come-on-now, enter either a 1 or 2!")
+                        continue
+                break
+            elif WON == 4 or WON2 == 4: ### 4 means no one has won
                 continue
             continue
-        elif move == "2": ### Even if player stays the computer still needs a card
-            #addCardC = x.addCardComp()
             
-                
-            WON = x.won() ### checking if anyone won
-            addCardC = x.addCardComp()
-            if addCardC == 1:
-                print(clear)
-                break
-            '''
-            if WON == 1:
-                again = input("You WON this round. Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
-                continue
-            elif WON == 2:
-                again = input("You LOST this round. Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
-                continue
-            elif WON == 3:
-                again = input("PUSH!!! Play again? 1 YES 2 NO:")
-                if again == "1":
-                    print(clear)
-                    break
-                elif again == "2":
-                    print("OK then, it was fun playing. Goodbye.")
-                    sys.exit(0)
-                else:
-                    print("Come-on-now, enter either a 1 or 2!")
-                    continue
-                continue
-                
-            elif WON == 4:
-                x.addCardComp()
-                    
-                continue
-            continue 
+            
         else:
             print("Come-on-now, enter either a 1 or 2!")
             continue
-            '''
-    ####  THOUGHTS ### There's a bug when have an Ace and goes into the addCardComp method. For some reason it is still adding
-    ###        the orginal 11 amount and auto busting the player when it reaches the > 21 you LOST IF statement FIX
+            
+    ####  THOUGHTS after I freeze a card in MAIN, and call the Class which I assigned as x...it uses the frozen value and can then
+    ####   be passed to other methods without the self..
+    #### BUG if there are 2 aces it will turn both to value 1.
